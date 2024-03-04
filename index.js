@@ -6,10 +6,10 @@ const server=http.createServer(app); //it is comming from http module
 const io=socketio(server);
 io.on('connection', (socket) => {
     console.log('a user connected',socket.id);
-   //socket.on is for liestening the events from frontend
+  //socket.on is for liestening the events from frontend
   socket.on('from_client',()=>{
     console.log('event comming from client');
-   })
+   });
 
 
 
