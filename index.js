@@ -9,9 +9,10 @@ io.on('connection', (socket) => {
   //socket.on is for liestening the events from frontend
   socket.on('msg-send',(data)=>{ //when u r listening to the event you need a callback which takes parameter (data) in which there is same object which u r sending
     console.log(data); //listening the message from server 
-    io.emit('msg received',data);//server is going to now emit/semd and event all the connection that are present 
-     
-  })
+    // io.emit('msg-received',data);//server is going to now emit/semd and event all the connection that are present 
+    //  socket.emit('msg-received',data);//it will not send data too all the connected services
+    socket.broadcast.emit('msg-received',data); //except the sender other will get the message
+  });
    
    
 
