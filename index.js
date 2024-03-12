@@ -1,6 +1,9 @@
 const express =require('express');
 const http=require('http');
 const socketio=require('socket.io');
+const connect=require('./config/database-config');
+
+
 const app=express();
 const server=http.createServer(app); //it is comming from http module
 const io=socketio(server);
@@ -11,7 +14,7 @@ io.on('connection', (socket) => {
     console.log(data); //listening the message from server 
     // io.emit('msg-received',data);//server is going to now emit/semd and event all the connection that are present 
     //  socket.emit('msg-received',data);//it will not send data too all the connected services
-    socket.broadcast.emit('msg-received',data); //except the sender other will get the message
+    io.emit('msg-received',data); //except the sender other will get the message
   });
    
    
@@ -24,7 +27,9 @@ app.use('/',express.static(__dirname + '/public')); //this middleware maps where
 
 
 
-server.listen(3000,()=>{
+server.listen(3000,async()=>{
     console.log("Server started");
+    await connect();
+    console.log("mongodb connected");
 });
 
