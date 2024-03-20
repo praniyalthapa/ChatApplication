@@ -7,8 +7,31 @@
 </head>
 <body>
     <h1>Chat Now!</h1>
-    <%= name %>
-    <%= id %>
+    <input type="text" id="username" placeholder="User Id">
+    <input type="text" name="" id="msg" placeholder="type something..">
+    <button id="btn" class="btn btn-dark">Send Message</button>
     
+    <ul id="msg-list">
+        
+    </ul>
+    <!-- <%= name %>
+    <%= id %> -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+let btn=document.getElementById('btn');
+let inputMsg=document.getElementById('msg');
+let msgList=document.getElementById('msg-list');
+  btn.onclick=function exec(){
+    socket.emit('msg-send',{
+        msg:inputMsg.value
+    });
+  }
+  socket.on('msg-received',(data)=>{   //this is listener which collectes the message from server and do the given tasks
+    let  limsg=document.createElement('li');
+    limsg.innerText=data.msg;
+    msgList.appendChild(limsg);
+  })
+    </script>
 </body>
 </html>
