@@ -9,6 +9,11 @@ const server=http.createServer(app); //it is comming from http module
 const io=socketio(server);
 io.on('connection', (socket) => {
     console.log('a user connected',socket.id);
+   
+    socket.on('join_room',(roomid)=>{
+      socket.join(roomid)
+    })
+
   //socket.on is for liestening the events from frontend
   socket.on('msg-send',(data)=>{ //when u r listening to the event you need a callback which takes parameter (data) in which there is same object which u r sending
     console.log(data); //listening the message from server 
