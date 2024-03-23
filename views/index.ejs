@@ -24,10 +24,13 @@
 
 let btn=document.getElementById('btn');
 let inputMsg=document.getElementById('msg');
+let username=document.getElementById('username');
 let msgList=document.getElementById('msg-list');
   btn.onclick=function exec(){
     socket.emit('msg-send',{
-        msg:inputMsg.value
+        msg:inputMsg.value,
+        username:username.value ,
+        roomid:startchat.getAttribute('data-roomid')
     });
   }
 
@@ -38,7 +41,7 @@ let msgList=document.getElementById('msg-list');
   }
   socket.on('msg-received',(data)=>{   //this is listener which collectes the message from server and do the given tasks
     let  limsg=document.createElement('li');
-    limsg.innerText=data.msg;
+    limsg.innerText=`${data.username}:${data.msg}`;
     msgList.appendChild(limsg);
   })
     </script>
