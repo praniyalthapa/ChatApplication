@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Chat Now!</h1>
-    <button id="startchat" data-roomid="<%= id %>">Start Chat</button>
+    <input id="startchat" type="hidden" data-roomid="<%= id %>">Start Chat</input>
     <input type="text" id="username" placeholder="User Id">
     <input type="text" name="" id="msg" placeholder="type something..">
     <button id="btn" class="btn btn-dark">Send Message</button>
@@ -26,6 +26,10 @@ let btn=document.getElementById('btn');
 let inputMsg=document.getElementById('msg');
 let username=document.getElementById('username');
 let msgList=document.getElementById('msg-list');
+socket.emit('join_room',{
+      roomid:startchat.getAttribute('data-roomid')
+     })
+
   btn.onclick=function exec(){
     socket.emit('msg-send',{
         msg:inputMsg.value,
@@ -34,11 +38,7 @@ let msgList=document.getElementById('msg-list');
     });
   }
 
-  startchat.onclick=function exec(){
-     socket.emit('join_room',{
-      roomid:startchat.getAttribute('data-roomid')
-     })
-  }
+  
   socket.on('msg-received',(data)=>{   //this is listener which collectes the message from server and do the given tasks
     let  limsg=document.createElement('li');
     limsg.innerText=`${data.username}:${data.msg}`;

@@ -2,6 +2,7 @@ const express =require('express');
 const http=require('http');
 const socketio=require('socket.io');
 const connect=require('./config/database-config');
+const Chat=require('./models/chat');
 const app=express();
 const server=http.createServer(app); //it is comming from http module
 const io=socketio(server);
@@ -12,10 +13,17 @@ io.on('connection', (socket) => {
       socket.join(data.roomid);
   });
   //socket.on is for liestening the events from frontend
-  socket.on('msg-send',(data)=>{ //when u r listening to the event you need a callback which takes parameter (data) in which there is same object which u r sending
+  socket.on('msg-send',async(data)=>{ //when u r listening to the event you need a callback which takes parameter (data) in which there is same object which u r sending
     console.log(data); //listening the message from server 
     // io.emit('msg-received',data);//server is going to now emit/semd and event all the connection that are present 
     //  socket.emit('msg-received',data);//it will not send data too all the connected services
+    const chat=await Chat.create({
+      roomid:data.roomid,
+      user:data.user,
+      content:data.msg
+    })
+  
+
     io.to(data.roomid).emit('msg-received',data); //except the sender other will get the message
   })
   });
