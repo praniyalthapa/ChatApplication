@@ -30,10 +30,15 @@ io.on('connection', (socket) => {
 //in express to connect with static file like html we do
 app.set('view engine','ejs');
 app.use('/',express.static(__dirname + '/public')); //this middleware maps where your static file is located
-app.get('/chat/:roomid',(req,res)=>{
+app.get('/chat/:roomid',async(req,res)=>{
+  const chats=await Chat.find({
+    roomID:req.params.roomid
+  }).select('content user');
+  console.log(chats);
   res.render('index',{   // it will render index.ejs file
     name:'Praniyal',
-    id:req.params.roomid
+    id:req.params.roomid,
+    chats:chats
   });
 })
 server.listen(3000,async()=>{
