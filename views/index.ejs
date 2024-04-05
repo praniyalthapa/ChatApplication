@@ -6,10 +6,17 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Chat Now!</h1>
+  <div>
+      <input type="text" id="username" placeholder="username..">
+      <button id="btn">Send</button>
+  </div>
+ 
+
+   <h1>Chat Now!</h1>
     <input id="startchat" type="hidden" data-roomid="<%= id %>">Start Chat</input>
-    <input type="text" id="username" placeholder="User Id">
+    <input type="text" id="username" placeholder="Username...">
     <input type="text" name="" id="msg" placeholder="type something..">
+    <span id="typing">someone is typing...</span>
     <button id="btn" class="btn btn-dark">Send Message</button>
     
     <ul id="msg-list">
@@ -18,15 +25,20 @@
      <% } %>
         
     </ul>
+
     <!-- <%= name %>
     <%= id %> -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
         let startchat=document.getElementById('startchat');
+        let typing=false;
+        let typingId=none;
 
 let btn=document.getElementById('btn');
 let inputMsg=document.getElementById('msg');
+let spantype=document.getElementById('typing');
+spantype.style.display='none';
 let username=document.getElementById('username');
 let msgList=document.getElementById('msg-list');
 socket.emit('join_room',{
@@ -46,7 +58,27 @@ socket.emit('join_room',{
     let  limsg=document.createElement('li');
     limsg.innerText=`${data.username}:${data.msg}`;
     msgList.appendChild(limsg);
+  });
+   
+  socket.on('someone_typing',(data)=>{
+    spantype.style.display='block';
+    setTimeout(()=>{
+     if(typing) typing=false
+     spantype.style.display= 'none'
+
+    },2000)
+    
   })
+
+   inputMsg.addEventListener('keypress',function(e){
+    typing=true;
+     socket.emit('typing',{
+       roomid:startchat.getAttribute('data-roomid')
+
+     });
+   })
+
+
     </script>
 </body>
 </html>

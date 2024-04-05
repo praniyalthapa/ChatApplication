@@ -24,9 +24,19 @@ io.on('connection', (socket) => {
     })
   
 
-    io.to(data.roomid).emit('msg-received',data); //except the sender other will get the message
+    io.to(data.roomid).broadcast.emit('msg-received',data); //except the sender other will get the message
   })
+  socket.on('typing',(data)=>{
+    io.to(data.roomID).emit('someone_typing');
+  })
+
+
   });
+
+
+
+
+
 //in express to connect with static file like html we do
 app.set('view engine','ejs');
 app.use('/',express.static(__dirname + '/public')); //this middleware maps where your static file is located
@@ -40,6 +50,7 @@ app.get('/chat/:roomid',async(req,res)=>{
     id:req.params.roomid,
     chats:chats
   });
+  
 })
 server.listen(3000,async()=>{
     console.log("Server started");
