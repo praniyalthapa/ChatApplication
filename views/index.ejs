@@ -62,20 +62,21 @@ socket.emit('join_room',{
    
   socket.on('someone_typing',(data)=>{
     spantype.style.display='block';
-    setTimeout(()=>{
-     if(typing) typing=false
-     spantype.style.display= 'none'
-
-    },2000)
+    
+    
     
   })
 
    inputMsg.addEventListener('keypress',function(e){
     typing=true;
-     socket.emit('typing',{
-       roomid:startchat.getAttribute('data-roomid')
-
-     });
+    socket.emit('typing',{
+      roomid: startchat.getAttribute('data-roomid'),
+    });
+    clearTimeout(typingId);
+    typingId =setTimeout(()=>{
+      spantype.style.display='none';
+    },3000);
+    
    })
 
 
